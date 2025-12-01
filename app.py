@@ -1,7 +1,7 @@
 import streamlit as st
 import ollama
 
-st.title("Chatbot")
+st.title("Medical Coding AI Assistant")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -9,21 +9,18 @@ if "messages" not in st.session_state:
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
-if prompt := st.chat_input("What's on your mind?"):
-    
+
+if prompt := st.chat_input("Ask about medical coding"):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    
     
     with st.chat_message("user"):
         st.markdown(prompt)
-    
     
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
         
-       
-        for response in ollama.chat(model='llama2', messages=[
+        for response in ollama.chat(model='mistral', messages=[
             {'role': m["role"], 'content': m["content"]} 
             for m in st.session_state.messages
         ]):
@@ -32,5 +29,4 @@ if prompt := st.chat_input("What's on your mind?"):
         
         message_placeholder.markdown(full_response)
     
-   
     st.session_state.messages.append({"role": "assistant", "content": full_response})
